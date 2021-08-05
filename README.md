@@ -244,8 +244,6 @@ props & state를 함께 봐야함
 - props: UI(사용자가 조작하는 장치)
 - state: 내부 구현하는 것에 필요한 장치
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1e86c2d0-312c-4692-a9e4-2c13a2f38cca/스크린샷_2021-08-06_오전_1.19.45.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1e86c2d0-312c-4692-a9e4-2c13a2f38cca/스크린샷_2021-08-06_오전_1.19.45.png)
-
 constructor:  Component의 초기화를 담당함
 
 내부적으로 사용할 코드들은 state를 통해서 수정한다는 것이 핵심!
@@ -321,4 +319,4 @@ export default TOC;
 
 → 이는 React에서 내부적으로 필요한 것이니까 꼭 넣어주기~
 
-→ EX> <li key={data[i].id}>
+→ EX> '''<li key={data[i].id}>'''
