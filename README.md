@@ -319,4 +319,5 @@ export default TOC;
 
 → 이는 React에서 내부적으로 필요한 것이니까 꼭 넣어주기~
 
-→ EX> '''<li key={data[i].id}>'''
+→ EX> 
+  ```<li key={data[i].id}```
