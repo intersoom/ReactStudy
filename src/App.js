@@ -4,19 +4,27 @@ import Content from './components/Content'
 import Subject from './components/Subject'
 import './App.css';
 
-
-
-
-
-
-
-//유사 javascript (찐 아님!!) -> jsx임!
-class App extends Component{ //component라는 class를 상속 받아서 App이라는 class를 만듦
-  render(){ // 해당 class는 render()라는 method를 갖고 있음
+class App extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      subject:{title: 'WEB', sub: 'World Wide Web!'},
+      contents:[
+        {id:1, title:'HTML', desc:'HTML is HyperText....'},
+        {id:2, title:'CSS', desc:'CSS is for design'},
+        {id:3, title:'JavaScript', desc:'JavaScript is for interactive'},
+      ]
+    }
+  }
+  render(){ 
     return(
       <div>
-        <Subject title="WEB" sub="world wide web!"></Subject>
-        <TOC />
+        <Subject 
+          title={this.state.subject.title} 
+          sub={this.state.subject.sub} >
+        </Subject>
+        <TOC data={this.state.contents}>
+        </TOC>
         <Content title="HTML" sub="HTML is HyperText Markup Language."></Content>
       </div>
     )
