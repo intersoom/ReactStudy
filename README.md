@@ -95,3 +95,230 @@ React가 개발의 편의성을 위해서 이런 저런 기능들을 추가해�
 npm install -g serve 라는 명령어를 치면 build 안에 있는 파일들로 구성된 페이지를 볼 수 있음
 
 ++ npx -s build를 사용하면 일회성으로 똑같이 사용 가능
+
+# [Section 2]
+
+## 1. 컴포넌트 만들기
+
+```jsx
+import React, {Component} from 'react';
+import './App.css';
+
+class Subject extends Component {
+  render(){
+    return(
+      <header>
+        <h1>WEB</h1>
+        world wide web!
+      </header>
+    );
+  }
+}
+
+class TOC extends Component {
+  render(){
+    return(
+      <nav>
+        <ul>
+          <li><a href="1.html">HTML</a></li>
+          <li><a href="2.html">CSS</a></li>
+          <li><a href="3.html">Javascript</a></li>
+        </ul>
+      </nav>
+    );
+  }
+}
+
+class Content extends Component {
+  render(){
+    return(
+      <article>
+        <h2>HTML</h2>
+        HTML is HyperText Markup Language.
+      </article>
+    );
+  }
+}
+
+//유사 javascript (찐 아님!!) -> jsx임!
+class App extends Component{ //component라는 class를 상속 받아서 App이라는 class를 만듦
+  render(){ // 해당 class는 render()라는 method를 갖고 있음
+    return(
+      <div>
+        <Subject />
+        <TOC />
+        <Content />
+      </div>
+    )
+  }
+}
+
+export default App;
+```
+
+→ 컴포넌트는 정리정돈의 수단
+
+→ 컴포넌트의 이름에 집중하게 하여서 복잡도를 낮춤
+
+## 2. props
+
+태그에는 속성이 존재함 → 그래서 때에 따라서 내용을 변경할 수 있음
+
+<Nav title="WEB" sub="hello">
+
+→ 여기서 title과 sub를 만드는 것이 props
+
+```jsx
+import React, {Component} from 'react';
+import './App.css';
+
+class Subject extends Component {
+  render(){
+    return(
+      <header>
+        <h1>{this.props.title}</h1>
+        {this.props.sub}
+      </header>
+    );
+  }
+}
+
+class TOC extends Component {
+  render(){
+    return(
+      <nav>
+        <ul>
+          <li><a href="1.html">HTML</a></li>
+          <li><a href="2.html">CSS</a></li>
+          <li><a href="3.html">Javascript</a></li>
+        </ul>
+      </nav>
+    );
+  }
+}
+
+class Content extends Component {
+  render(){
+    return(
+      <article>
+        <h2>{this.props.title}</h2>
+        {this.props.sub}
+      </article>
+    );
+  }
+}
+
+//유사 javascript (찐 아님!!) -> jsx임!
+class App extends Component{ //component라는 class를 상속 받아서 App이라는 class를 만듦
+  render(){ // 해당 class는 render()라는 method를 갖고 있음
+    return(
+      <div>
+        <Subject title="WEB" sub="world wide web!"></Subject>
+        <TOC />
+        <Content title="HTML" sub="HTML is HyperText Markup Language."></Content>
+      </div>
+    )
+  }
+}
+
+export default App;
+```
+
+## 3. React Developer Tools
+
+독립하기 위해서 필요한 특징들:
+
+1. 설명서를 볼줄 아는 것
+2. 추론을 해서 확인하는 것 (스스로 알아내는 능력)
+3. 질문하는 것
+4. 검색하는 것
+
+# [Section 3]
+
+## 1. State
+
+props & state를 함께 봐야함
+
+[예시: IPhone]
+
+- props: UI(사용자가 조작하는 장치)
+- state: 내부 구현하는 것에 필요한 장치
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1e86c2d0-312c-4692-a9e4-2c13a2f38cca/스크린샷_2021-08-06_오전_1.19.45.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1e86c2d0-312c-4692-a9e4-2c13a2f38cca/스크린샷_2021-08-06_오전_1.19.45.png)
+
+constructor:  Component의 초기화를 담당함
+
+내부적으로 사용할 코드들은 state를 통해서 수정한다는 것이 핵심!
+
+→ 외부에서 알 필요 없는 것들은 은닉하는 것
+
+상위 컴포넌트의 상태를 하위 컴포넌트로 전달하고 싶을 때:
+
+→ 상위 컴포넌트의 state를 하위 컴포넌트의 props로 전달함
+
+```jsx
+import React, {Component} from 'react';
+import TOC from './components/TOC'
+import Content from './components/Content'
+import Subject from './components/Subject'
+import './App.css';
+
+class App extends Component{
+  constructor(props){
+    super(props);
+  }
+  render(){ 
+    return(
+      <div>
+        <Subject title="WEB" sub="world wide web!"></Subject>
+        <TOC />
+        <Content title="HTML" sub="HTML is HyperText Markup Language."></Content>
+      </div>
+    )
+  }
+}
+
+export default App;
+```
+
+## 2. key
+
+```jsx
+import React, {Component} from 'react';
+
+class TOC extends Component {
+    render(){
+      var lists = [];
+      var data = this.props.data;
+      var i = 0;
+
+      while (i < data.length){
+        lists.push(<li key={data[i].id}><a href={"/content/"+data[i].id}>{data[i].title}</a></li>);
+        i = i + 1;
+      }
+      return(
+        <nav>
+          <ul>
+            {lists}
+          </ul>
+        </nav>
+      );
+    }
+  }
+
+export default TOC;
+```
+
+다음과 같이 배열을 활용해서 TOC 내부 파일을 App에서 내용이 바뀔 때마다 건들지 않고 수정할 수 있음
+
+⚠️ **주의할 점** ⚠️
+
+→ element를 자동으로 여러 개 생성하는 경우, 콘솔에 에러 발생
+
+→ 이를 없애주기 위해서는 key라는 props를 작성해줘야함
+
+→ 각각의 목록을 구별할 수 있는 식별자를 작성!
+
+→ 이는 React에서 내부적으로 필요한 것이니까 꼭 넣어주기~
+
+→ EX> <li key={data[i].id}>
