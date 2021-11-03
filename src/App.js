@@ -8,7 +8,10 @@ class App extends Component{
   constructor(props){
     super(props);
     this.state = {
+      mode: 'welcome',
       subject:{title: 'WEB', sub: 'World Wide Web!'},
+      welcome:{title:'Welcome', desc:'Hello, React!!!'},
+      selected_content_id: 2,
       contents:[
         {id:1, title:'HTML', desc:'HTML is HyperText....'},
         {id:2, title:'CSS', desc:'CSS is for design'},
@@ -16,16 +19,47 @@ class App extends Component{
       ]
     }
   }
+  
+
   render(){ 
+    var _title, _desc = null;
+    if(this.state.mode === 'welcome'){
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+    } else if (this.state.mode === 'read'){
+      var i = 0;
+      while (i < this.state.contents.length){
+        var data = this.state.contents[i];
+        if (data.id === this.state.selected_content_id){
+          _title = data.title;
+          _desc = data.desc;
+          break;
+        }
+        i += 1;
+      }
+      
+    }
     return(
       <div>
         <Subject 
           title={this.state.subject.title} 
-          sub={this.state.subject.sub} >
+          sub={this.state.subject.sub}
+          onChangePage = {function(){
+            this.setState({mode: 'welcome'})
+          }.bind(this)}
+        >
+
         </Subject>
-        <TOC data={this.state.contents}>
+        <TOC 
+        onChangePage = {function(id){
+          this.setState({
+              mode: 'read',
+              selected_content_id: Number(id)
+          });
+        }.bind(this)}
+        data={this.state.contents}>
         </TOC>
-        <Content title="HTML" sub="HTML is HyperText Markup Language."></Content>
+        <Content title={_title} sub={_desc}></Content>
       </div>
     )
   }
