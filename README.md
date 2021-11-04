@@ -321,3 +321,349 @@ export default TOC;
 
 → EX> 
   ```<li key={data[i].id}>```
+
+# [Section 4]
+
+## 1. 이벤트 state, props, render 함수
+
+props, state에 대한 중요한 사실:
+
+→ props, state가 변경되면 render함수가 다시 호출되고 하위에 있는 컴포넌트들에게 각각 있는 render함수도 마찬가지로 다시 호출됨
+
+→ 따라서 props나 state가 바뀌면 화면이 다시 그려짐
+
+render 함수 == 어떤 html을 그릴 것인가를 결정하는 함수
+
+```jsx
+import React, {Component} from 'react';
+import TOC from './components/TOC'
+import Content from './components/Content'
+import Subject from './components/Subject'
+import './App.css';
+
+class App extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      mode: 'welcome',
+      subject:{title: 'WEB', sub: 'World Wide Web!'},
+      welcome:{title:'Welcome', desc:'Hello, React!!!'},
+      contents:[
+        {id:1, title:'HTML', desc:'HTML is HyperText....'},
+        {id:2, title:'CSS', desc:'CSS is for design'},
+        {id:3, title:'JavaScript', desc:'JavaScript is for interactive'},
+      ]
+    }
+  }
+  
+
+  render(){ 
+    
+    var _title, _desc = null;
+    if(this.state.mode === 'welcome'){
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+    } else if (this.state.mode === 'read'){
+      _title = this.state.contents[0].title;
+      _desc = this.state.contents[0].desc;
+    }
+    return(
+      <div>
+        <Subject 
+          title={this.state.subject.title} 
+          sub={this.state.subject.sub} >
+        </Subject>
+        <TOC data={this.state.contents}>
+        </TOC>
+        <Content title={_title} sub={_desc}></Content>
+      </div>
+    )
+  }
+}
+
+export default App;
+```
+
+→ this.state.mode가 welcome일 경우, Content의 title이 "Welcome"이 들어가고 desc에는 "Hello, React!!"가 들어간다
+
+→ this.state.mode가 read일 경우, Content의 title이 "HTML"이 들어가고 desc에는 "HTML is HyperText...."가 들어간다
+
+## 2. 이벤트 설치 및 기본적인 속성 막기 (preventDefault)
+
+최종적인 목표: Subject 컴포넌트 안에 있는 a 태그를 누르면 App 전체의 내용이 바뀌게끔 하는 것
+
+→ 이거는 어려움
+
+→ 그래서 일단 Subject 컴포넌트 빼고 그 내용을 가져와서 사용하기
+
+HTML의 onclick=""과 같은 기능을 하게 하려면 → React에서는 onClick={} 사용해야함
+
+```jsx
+import React, {Component} from 'react';
+import TOC from './components/TOC'
+import Content from './components/Content'
+import Subject from './components/Subject'
+import './App.css';
+
+class App extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      mode: 'welcome',
+      subject:{title: 'WEB', sub: 'World Wide Web!'},
+      welcome:{title:'Welcome', desc:'Hello, React!!!'},
+      contents:[
+        {id:1, title:'HTML', desc:'HTML is HyperText....'},
+        {id:2, title:'CSS', desc:'CSS is for design'},
+        {id:3, title:'JavaScript', desc:'JavaScript is for interactive'},
+      ]
+    }
+  }
+  
+
+  render(){ 
+    
+    var _title, _desc = null;
+    if(this.state.mode === 'welcome'){
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+    } else if (this.state.mode === 'read'){
+      _title = this.state.contents[0].title;
+      _desc = this.state.contents[0].desc;
+    }
+    return(
+      <div>
+        {/* <Subject 
+          title={this.state.subject.title} 
+          sub={this.state.subject.sub} >
+        </Subject> */}
+        <header>
+          <h1><a href="/" onClick={function(){
+            alert('hi');
+          }
+          }>{this.state.subject.title}</a></h1>
+          {this.state.subject.sub}
+        </header>
+        <TOC data={this.state.contents}>
+        </TOC>
+        <Content title={_title} sub={_desc}></Content>
+      </div>
+    )
+  }
+}
+
+export default App;
+```
+
+→ 이 코드를 실행시키면 WEB을 눌렀을 때 페이지가 리로드 됨
+
+→ 이는 a 태그가 가지고 있는 href 속성이 가리키는 페이지로 이동시키는 기본적인 속성 때문
+
+→ 이를 없애주고 싶음
+
+→ React에서는 onclick으로 함수를 실행시키면, 함수의 첫번째 매개변수 값으로 event라는 객체를 주입해주기로 약속되어있음 (따라서 거기에 e를 써줌)
+
+** debugger라는 코드를 활용하면 debugger라는 코드가 쓰여진 곳에서 화면이 멈추고 sources(개발자 도구)를 통해서 소스 코드를 볼 수 있게 해줌
+
+→ 그래서 e.preventDefault라고 하면 기본적인 동작 방법을 금지시킬 수 있도록 함
+
+```jsx
+import React, {Component} from 'react';
+import TOC from './components/TOC'
+import Content from './components/Content'
+import Subject from './components/Subject'
+import './App.css';
+
+class App extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      mode: 'welcome',
+      subject:{title: 'WEB', sub: 'World Wide Web!'},
+      welcome:{title:'Welcome', desc:'Hello, React!!!'},
+      contents:[
+        {id:1, title:'HTML', desc:'HTML is HyperText....'},
+        {id:2, title:'CSS', desc:'CSS is for design'},
+        {id:3, title:'JavaScript', desc:'JavaScript is for interactive'},
+      ]
+    }
+  }
+  
+
+  render(){ 
+    
+    var _title, _desc = null;
+    if(this.state.mode === 'welcome'){
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+    } else if (this.state.mode === 'read'){
+      _title = this.state.contents[0].title;
+      _desc = this.state.contents[0].desc;
+    }
+    return(
+      <div>
+        {/* <Subject 
+          title={this.state.subject.title} 
+          sub={this.state.subject.sub} >
+        </Subject> */}
+        <header>
+          <h1><a href="/" onClick={function(e){
+            console.log(e);
+            e.preventDefault();
+          }
+          }>{this.state.subject.title}</a></h1>
+          {this.state.subject.sub}
+        </header>
+        <TOC data={this.state.contents}>
+        </TOC>
+        <Content title={_title} sub={_desc}></Content>
+      </div>
+    )
+  }
+}
+
+export default App;
+```
+
+## 3. 이벤트에서 state 변경하기
+
+```jsx
+<h1><a href="/" onClick={function(e){
+            console.log(e);
+            e.preventDefault();
+            this.state.mode = 'welcome';
+          }
+          }>{this.state.subject.title}</a></h1>
+```
+
+→ event가 실행되었을 때 실행되는 저 함수 안에서는 this(원래는 컴포넌트 자신을 가리킴)가 아무 것도 가리키지 않음
+
+→ state가 undefined라고 뜸
+
+→ 해결 방법: 함수가 끝난 직후에 .bind(this)를 추가해주면 됨! 그러면 저 함수 안에서 this는 컴포넌트가 됨
+
+```jsx
+<h1><a href="/" onClick={function(e){
+            console.log(e);
+            e.preventDefault();
+            this.state.mode = 'welcome';
+          }.bind(this)
+          }>{this.state.subject.title}</a></h1>
+```
+
+## 4. 이벤트 bind 함수 이해하기
+
+→ bind: 엮다, 묶어주다
+
+→ render() 내에서 this == render 함수를 감싸고 있는 컴포넌트
+
+→  .bind(this로 바인드할 객체)를 사용하면 해당 함수 내에서는 this가 바인드한 객체가 된다
+
+```jsx
+var obj = {name: 'egoing'};
+
+function bindTest{
+	console.log(this.name);
+}
+
+bindTest2 = bindTest.bind(obj); // 함수 내부에서  this가 obj인 함수가 복제됨
+```
+
+## 5. setState 함수
+
+state 값을 직접 변경하지 않고 함수를 이용하여 변경하여야하는 이유:
+
+→ React 입장에서는 값을 몰래 바꾼 것임 따라서 렌더를 할 수 없음
+
+하지만 constructor에서는 굳이 setState 쓸 필요 없음
+
+```jsx
+this.setState({
+	mode: 'welcome';
+}); 
+```
+
+## 6. 컴포넌트 이벤트 만들기
+
+컴포넌트 이벤트 사용자 → 생성자로 바뀌는 방법
+
+```jsx
+<Subject
+	title = {this.state.subject.title}
+	sub = {this.state.subject.sub}
+	onChangePage = {function(){
+		this.setState({mode: 'welcome'});
+	}.bind(this)}
+>
+</Subject>
+```
+
+```jsx
+this.props.onChangePage(); //함수 실행됨
+```
+
+→ 첫번째 코드를 이용하여서 onChangePage라는 함수를 만들어서 사용자에게 제공함
+
+→ 사용자가 두번째 코드를 통해서 함수를 실행함
+
+예시:
+
+```jsx
+onChangePage = {
+	function(id){
+		this.setState({
+		mode: 'read',
+		selected_content_id: Number(id)
+		});
+	}.bind(this)}
+```
+
+```jsx
+<a
+	href = {"/content/" + data[i].id}
+	onClick = {function(e){
+		e.preventDerfault();
+		this.props.onChagePage(e.target.dataset.id); // 인자로 넘겨주기
+	}.bind(this, data[i].id)}
+>
+```
+
+# [section 5]
+
+## 1. 개념 정리
+
+**Props & State 차이점:**
+
+→ Props: 
+
+1. Read ONLY (components 내부에서 바꿀 수는 없음)
+2. can not be modified
+
+→ State:
+
+1. can be asynchronous
+2. can be modified using this.setState
+
+Component 내부적으로 필요한 data들은 State를 통해서 관리함
+
+외부(사용자)에서 props를 통해서 관리하고 component는 state를 통해서 관리
+
+![스크린샷 2021-11-03 오후 5.57.49.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cbc9c0f0-4deb-4e17-af46-92b3456a4940/스크린샷_2021-11-03_오후_5.57.49.png)
+
+하위 컴포넌트의 값을 바꾸고 싶을 때: props 변경
+
+상위 컴포넌트의 값을 바꾸고 싶을 때: event를 통해서 변경 
+
+## 2. CRUD: Create
+
+**CRUD:**
+
+→ **C:** Create (핵심)
+
+→ **R:** Read (핵심)
+
+→ **U:** Update
+
+→ **D:** Delete
+
+이벤트 핸들러: 이벤트가 실행되어야하는 함수
