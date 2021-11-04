@@ -648,7 +648,7 @@ Component 내부적으로 필요한 data들은 State를 통해서 관리함
 
 외부(사용자)에서 props를 통해서 관리하고 component는 state를 통해서 관리
 
-![스크린샷 2021-11-03 오후 5.57.49.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cbc9c0f0-4deb-4e17-af46-92b3456a4940/스크린샷_2021-11-03_오후_5.57.49.png)
+<img width="684" alt="스크린샷 2021-11-04 오후 5 36 55" src="https://user-images.githubusercontent.com/78731710/140282802-538e1779-7106-4e3a-97ae-a7f486e7d882.png">
 
 하위 컴포넌트의 값을 바꾸고 싶을 때: props 변경
 
