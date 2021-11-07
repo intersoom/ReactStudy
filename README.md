@@ -700,7 +700,7 @@ npm run eject → 개발 환경을 수정할 수 있음
 
 프로젝트가 커지면 컴포넌트 간 교류가 까다로워짐
 
-![스크린샷 2021-11-08 오전 3.02.01.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5878539b-2569-4a4f-8fd9-1a64e2fe0d90/스크린샷_2021-11-08_오전_3.02.01.png)
+<img width="477" alt="스크린샷 2021-11-08 오전 3 10 41" src="https://user-images.githubusercontent.com/78731710/140656642-2acd6f54-d819-4ac7-8080-b634aeb2a839.png">
 
 Redux: 중앙에 데이터 저장소를 만듦 
 
