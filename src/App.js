@@ -9,6 +9,7 @@ import './App.css';
 class App extends Component{
   constructor(props){
     super(props);
+    this.max_contents_id = 3;
     this.state = {
       mode: 'create',
       subject:{title: 'WEB', sub: 'World Wide Web!'},
@@ -44,7 +45,13 @@ class App extends Component{
     } else if (this.state.mode === 'create'){
       _article = <CreateContent onSubmit={function(_title, _desc){
         // add content to this.state.contents
-
+        this.max_contents_id += 1;
+        this.state.contents.push(
+          {id: this.max_contents_id, title: _title, des:_desc}
+        )
+        this.setState({
+          contents: this.state.contents
+        });
       }}></CreateContent>
     }
     return(
