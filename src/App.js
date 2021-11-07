@@ -45,14 +45,17 @@ class App extends Component{
     } else if (this.state.mode === 'create'){
       _article = <CreateContent onSubmit={function(_title, _desc){
         // add content to this.state.contents
-        this.max_contents_id += 1;
-        this.state.contents.push(
-          {id: this.max_contents_id, title: _title, des:_desc}
+        this.max_contents_id = this.max_contents_id + 1;
+        // this.state.contents.push(
+        //   {id: this.max_contents_id, title: _title, des:_desc}
+        // )
+        var _contents = this.state.contents.concat(
+          {id: this.max_contents_id, title: _title, desc: _desc}
         )
         this.setState({
-          contents: this.state.contents
+          contents: _contents
         });
-      }}></CreateContent>
+      }.bind(this)}></CreateContent>
     }
     return(
       <div>
